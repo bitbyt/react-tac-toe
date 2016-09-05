@@ -1,8 +1,25 @@
 import React from "react";
 import Header from "./Header";
 import Board from "./Board";
+var socket = io.connect('tictactoe.zhenjie.xyz');
 
 export default class App extends React.Component {
+  componentWillMount() {
+    socket.on('gameOn', gameon => {
+      this.setState({
+        gameboard: gameon
+      });
+    });
+  }
+
+  componentDidMount() {
+    socket.on('anyhow', gameon => {
+      this.setState({
+        gameboard: gameon
+      });
+      console.log(gameon);
+    });
+  }
 
   constructor() {
     super();
@@ -23,12 +40,14 @@ export default class App extends React.Component {
   updateEvent(coords) {
     let rowNum = coords[0];
     let colNum = coords[1];
+    let board = this.state.gameboard;
     if(this.state.player1) {
-      this.state.gameboard[colNum][rowNum] = 1;
+      board[colNum][rowNum] = 1;
     } else {
-      this.state.gameboard[colNum][rowNum] = -1;
+      board[colNum][rowNum] = -1;
     }
-    this.setState({gameboard: this.state.gameboard, player1: !(this.state.player1), turn: this.state.turn +1});
+    this.setState({gameboard: board, player1: !(this.state.player1), turn: this.state.turn +1});
+    socket.emit('whatever', this.state.gameboard);
     this.checkWin();
     console.log(this.state.gameboard);
     console.log(this.state.turn);
@@ -105,6 +124,10 @@ export default class App extends React.Component {
     console.log(this.state.gameboard);
     this.setState({gameboard: this.state.gameboard, player1: this.state.player1, turn: this.state.turn, gameState: this.state.gameState, message: this.state.message});
     console.log(this.state);
+  }
+
+  sendSocket() {
+    socket.emit('my other event', "Hello World");
   }
 
   render() {
