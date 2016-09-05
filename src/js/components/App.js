@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "./Header";
 import Board from "./Board";
-var socket = io.connect('http://tictactoe.zhenjie.xyz');
+var socket = io.connect('http://6eb4f91e.ngrok.io');
 
 export default class App extends React.Component {
   componentWillMount() {
@@ -13,6 +13,12 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
+    socket.on('assignTurn', playerturn => {
+      this.setState({
+        player1: playerturn
+      });
+      console.log(playerturn);
+    });
     socket.on('anyhow', gameon => {
       this.setState({
         gameboard: gameon.game
@@ -30,7 +36,7 @@ export default class App extends React.Component {
         [0,0,0],
         [0,0,0]
       ],
-      player1: true,
+      player1: false,
       turn: 1,
       gameState: true,
       message: ""
