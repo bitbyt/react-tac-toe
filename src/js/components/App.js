@@ -2,19 +2,17 @@ import React from "react";
 import Header from "./Header";
 import Board from "./Board";
 
-var gameboard = [
-  [0,0,0],
-  [0,0,0],
-  [0,0,0]
-];
-
 export default class App extends React.Component {
 
   constructor() {
     super();
 
     this.state = {
-      gameboard: gameboard,
+      gameboard: [
+        [0,0,0],
+        [0,0,0],
+        [0,0,0]
+      ],
       player1: true,
       turn: 1,
       gameState: true,
@@ -92,11 +90,28 @@ export default class App extends React.Component {
     }
   }
 
+  resetBoard() {
+    this.state = {
+      gameboard: [
+        [0,0,0],
+        [0,0,0],
+        [0,0,0]
+      ],
+      player1: true,
+      turn: 1,
+      gameState: true,
+      message: ""
+    }
+    console.log(this.state.gameboard);
+    this.setState({gameboard: this.state.gameboard, player1: this.state.player1, turn: this.state.turn, gameState: this.state.gameState, message: this.state.message});
+    console.log(this.state);
+  }
+
   render() {
     return(
       <div class="container row">
         <Header title="React Rac City Itch" subtitle="Simple game of tic tac toe on React" gameState={this.state.gameState} message={this.state.message}/>
-        <Board grid={gameboard} updateEvent={this.updateEvent.bind(this)}/>
+        <Board grid={this.state.gameboard} updateEvent={this.updateEvent.bind(this)} resetBoard={this.resetBoard.bind(this)}/>
       </div>
     )
   }

@@ -7,6 +7,10 @@ export default class Board extends React.Component {
     this.state = { }
   }
 
+  clickEvent(e) {
+    this.props.resetBoard();
+  }
+
   boardRender() {
     return this.props.grid.map((rows, rowIndex) => {
       let row = rows.map((value, colIndex) => {
@@ -26,6 +30,7 @@ export default class Board extends React.Component {
         <div class="grid">
           {this.boardRender()}
         </div>
+        <button type="button" id="ctrl-btn" class="btn btn-primary" onClick={this.clickEvent.bind(this)}>Restart</button>
       </div>
     )
   }
