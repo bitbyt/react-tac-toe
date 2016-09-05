@@ -1,13 +1,13 @@
 import React from "react";
 import Header from "./Header";
 import Board from "./Board";
-var socket = io.connect('tictactoe.zhenjie.xyz');
+var socket = io.connect('http://tictactoe.zhenjie.xyz');
 
 export default class App extends React.Component {
   componentWillMount() {
     socket.on('gameOn', gameon => {
       this.setState({
-        gameboard: gameon
+        gameboard: gameon.game
       });
     });
   }
@@ -15,7 +15,7 @@ export default class App extends React.Component {
   componentDidMount() {
     socket.on('anyhow', gameon => {
       this.setState({
-        gameboard: gameon
+        gameboard: gameon.game
       });
       console.log(gameon);
     });
