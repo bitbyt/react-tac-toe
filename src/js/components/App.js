@@ -1,7 +1,8 @@
 import React from "react";
 import Header from "./Header";
 import Board from "./Board";
-var socket = io.connect('http://6eb4f91e.ngrok.io');
+import Login from "./Login";
+var socket = io.connect('localhost:5000');
 
 export default class App extends React.Component {
   componentWillMount() {
@@ -13,15 +14,10 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    socket.on('assignTurn', playerturn => {
+    socket.on('get board updates', gameon => {
       this.setState({
-        player1: playerturn
-      });
-      console.log(playerturn);
-    });
-    socket.on('anyhow', gameon => {
-      this.setState({
-        gameboard: gameon.game
+        gameboard: gameon.game,
+
       });
       console.log(gameon);
     });
@@ -29,6 +25,9 @@ export default class App extends React.Component {
 
   constructor() {
     super();
+
+    this._createRoom = this._createRoom.bind(this);
+    this._generateRoomKey = this._generateRoomKey.bind(this);
 
     this.state = {
       gameboard: [
@@ -43,6 +42,31 @@ export default class App extends React.Component {
     }
   }
 
+  _generateRoomKey() {
+    var roomKey = "";
+    var roomKeyLength = 6;
+    var possible = "abcdefghijklmnopqrstuvwxyz";
+
+    for( var i=0; i < roomKeyLength; i++ ) {
+      roomKey += possible.charAt(Math.floor(Math.random() * possible.length));
+    };
+    return roomKey;
+  }
+
+  _createRoom(userName) {
+    console.log("created!");
+    let room = this._generateRoomKey();
+    console.log("room key is " + room);
+
+    socket.emit('create room', room);
+    socket.emit('player one joins', "userName");
+  }
+
+  joinRoom(userName,roomKey) {
+    socket.emit('join room', roomKey);
+    socket.emit('player two joins', userName);
+  }
+
   updateEvent(coords) {
     let rowNum = coords[0];
     let colNum = coords[1];
@@ -52,8 +76,8 @@ export default class App extends React.Component {
     } else {
       board[colNum][rowNum] = -1;
     }
-    this.setState({gameboard: board, player1: !(this.state.player1), turn: this.state.turn +1});
-    socket.emit('whatever', this.state.gameboard);
+    this.setState({gameboard: board, turn: this.state.turn +1});
+    socket.emit('update board', this.state.gameboard);
     this.checkWin();
     console.log(this.state.gameboard);
     console.log(this.state.turn);
@@ -140,6 +164,7 @@ export default class App extends React.Component {
     return(
       <div class="container row">
         <Header title="React Rac City Itch" subtitle="Simple game of tic tac toe on React" gameState={this.state.gameState} message={this.state.message}/>
+        <Login createRoom={this._createRoom}/>
         <Board grid={this.state.gameboard} updateEvent={this.updateEvent.bind(this)} resetBoard={this.resetBoard.bind(this)}/>
       </div>
     )
