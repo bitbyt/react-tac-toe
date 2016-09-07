@@ -4,57 +4,74 @@ export default class Login extends React.Component {
   constructor(props) {
     super(props);
     this._createRoomHandle = this._createRoomHandle.bind(this);
+    this._joinRoomHandle = this._joinRoomHandle.bind(this);
     this.state = {
+      username: "",
+      roomkey: ""
     }
   }
 
   _createRoomHandle(e) {
     e.preventDefault();
-    this.props.createRoom();
-    console.log("clicked");
+    this.props.createRoom(this.refs.usernameForm.refs.usernameInput.value);
+    console.log(this.refs.usernameForm.refs.usernameInput.value);
+  }
+
+  _joinRoomHandle(e) {
+    e.preventDefault();
+    this.props.joinRoom(this.refs.usernameForm.refs.usernameInput.value, this.refs.joinRoom.refs.roomKeyInput.value);
+  }
+
+  _updateUsername(e) {
+    e.preventDefault();
+    this.setState({username: this.refs.usernameForm.refs.usernameInput.value});
   }
 
   render() {
     return (
       <div>
-        <UsernameForm />
+        <UsernameForm ref="usernameForm" updateUsername={this._updateUsername}/>
         <CreateRoom click={this._createRoomHandle}/>
-        <JoinRoom />
+        <JoinRoom ref="joinRoom" click={this._joinRoomHandle}/>
       </div>
     )
   }
 }
 
 //Username form
-const UsernameForm = (props) => {
-  return (
-    <div>
-      <h3>What's your name?</h3>
-      <form>
-        <input className="u-full-width" type="text" />
-      </form>
-    </div>
-  )
+class UsernameForm extends React.Component {
+  render() {
+    return (
+      <div>
+        <h3>Enter your name</h3>
+        <input ref="usernameInput" className="u-full-width" type="text" />
+      </div>
+    )
+  }
 }
 
 //Component to create a room
-const CreateRoom = (props) => {
-  return (
-    <div>
-      <button className="createRoom" onClick={props.click}>Create Room</button>
-    </div>
-  )
+class CreateRoom extends React.Component {
+  render() {
+    return (
+      <div>
+        <button className="createRoom" onClick={this.props.click}>Create Room</button>
+      </div>
+    )
+  }
 }
 
 //Component to join a room
-const JoinRoom = (props) => {
-  return (
-    <div>
-      <h3>Enter room key:</h3>
-      <form>
-        <input className="u-full-width" type="text" />
-      </form>
-      <button className="JoinRoom">Join Room</button>
-    </div>
-  )
+class JoinRoom extends React.Component {
+  render() {
+    return (
+      <div>
+        <h3>Enter room key:</h3>
+        <form>
+          <input ref="roomKeyInput" className="u-full-width" type="text" />
+          <button className="JoinRoom" onClick={this.props.click}>Join Room</button>
+        </form>
+      </div>
+    )
+  }
 }
