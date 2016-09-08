@@ -6,8 +6,6 @@ export default class Login extends React.Component {
     this._createRoomHandle = this._createRoomHandle.bind(this);
     this._joinRoomHandle = this._joinRoomHandle.bind(this);
     this.state = {
-      username: "",
-      roomkey: ""
     }
   }
 
@@ -22,15 +20,10 @@ export default class Login extends React.Component {
     this.props.joinRoom(this.refs.usernameForm.refs.usernameInput.value, this.refs.joinRoom.refs.roomKeyInput.value);
   }
 
-  _updateUsername(e) {
-    e.preventDefault();
-    this.setState({username: this.refs.usernameForm.refs.usernameInput.value});
-  }
-
   render() {
     return (
       <div>
-        <UsernameForm ref="usernameForm" updateUsername={this._updateUsername}/>
+        <UsernameForm ref="usernameForm" />
         <CreateRoom click={this._createRoomHandle}/>
         <JoinRoom ref="joinRoom" click={this._joinRoomHandle}/>
       </div>
