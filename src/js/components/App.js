@@ -33,6 +33,8 @@ export default class App extends React.Component {
     socket.on('get board updates', gameUpdate => {
       this.setState({
         gameboard: gameUpdate.game,
+        message: gameUpdate.result.message,
+        gameState: gameUpdate.result.gameState
       });
     });
   }
@@ -83,62 +85,6 @@ export default class App extends React.Component {
     this.checkWin();
     console.log(this.state.gameboard);
     console.log(this.state.turn);
-  }
-
-  checkWin() {
-    let board = this.state.gameboard
-    if(board[0][0] + board[0][1] + board[0][2] === 3) {
-      this.state.message = "Player One Wins!"
-      this.state.gameState = false
-    } else if (board[1][0] + board[1][1] + board[1][2] === 3) {
-      this.state.message = "Player One Wins!"
-      this.state.gameState = false
-    } else if (board[2][0] + board[2][1] + board[2][2] === 3) {
-      this.state.message = "Player One Wins!"
-      this.state.gameState = false
-    } else if (board[0][0] + board[0][1] + board[0][2] === -3) {
-      this.state.message = "Player Two Wins!"
-      this.state.gameState = false
-    } else if (board[1][0] + board[1][1] + board[1][2] === -3) {
-      this.state.message = "Player Two Wins!"
-      this.state.gameState = false
-    } else if (board[2][0] + board[2][1] + board[2][2] === -3) {
-      this.state.message = "Player Two Wins!"
-      this.state.gameState = false
-    } else if(board[0][0] + board[1][0] + board[2][0] === 3) {
-      this.state.message = "Player One Wins!"
-      this.state.gameState = false
-    } else if (board[0][1] + board[1][1] + board[2][1] === 3) {
-      this.state.message = "Player One Wins!"
-      this.state.gameState = false
-    } else if (board[0][2] + board[1][2] + board[2][2] === 3) {
-      this.state.message = "Player One Wins!"
-      this.state.gameState = false
-    } else if (board[0][0] + board[1][0] + board[2][0] === -3) {
-      this.state.message = "Player Two Wins!"
-      this.state.gameState = false
-    } else if (board[0][1] + board[1][1] + board[2][1] === -3) {
-      this.state.message = "Player Two Wins!"
-      this.state.gameState = false
-    } else if (board[0][2] + board[1][2] + board[2][2] === -3) {
-      this.state.message = "Player Two Wins!"
-      this.state.gameState = false
-    } else if (board[0][0] + board[1][1] + board[2][2] === 3) {
-      this.state.message = "Player One Wins!"
-      this.state.gameState = false
-    } else if (board[0][2] + board[1][1] + board[2][0] === 3) {
-      this.state.message = "Player One Wins!"
-      this.state.gameState = false
-    } else if (board[0][0] + board[1][1] + board[2][2] === -3) {
-      this.state.message = "Player Two Wins!"
-      this.state.gameState = false
-    } else if (board[0][2] + board[1][1] + board[2][0] === -3) {
-      this.state.message = "Player Two Wins!"
-      this.state.gameState = false
-    } else if (this.state.turn === 9) {
-      this.state.message = "It's a Draw!"
-      this.state.gameState = false
-    }
   }
 
   resetBoard() {
