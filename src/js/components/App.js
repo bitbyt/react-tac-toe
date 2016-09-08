@@ -6,24 +6,13 @@ import io from "socket.io-client";
 let socket = io.connect('localhost:5000');
 
 export default class App extends React.Component {
-  componentWillMount() {
-    socket.on('gameOn', gameon => {
-      this.setState({
-        gameboard: gameon.game
-      });
-    });
-  }
 
   componentDidMount() {
-    socket.on('get board updates', gameUpdate => {
-      this.setState({
-        gameboard: gameUpdate.game,
-      });
-    });
     socket.on('authenticate', authenticated => {
       this.setState({
         roomName: authenticated.roomName,
-        player1: authenticated.player1
+        player1: authenticated.player1,
+        gameboard: authenticated.gameBoard
       });
       console.log(this.state.player1);
     });
@@ -40,6 +29,12 @@ export default class App extends React.Component {
     socket.on('joinError', error => {
       console.log(error);
     });
+
+    socket.on('get board updates', gameUpdate => {
+      this.setState({
+        gameboard: gameUpdate.game,
+      });
+    });
   }
 
   constructor() {
@@ -49,11 +44,7 @@ export default class App extends React.Component {
     this._joinRoom = this._joinRoom.bind(this);
 
     this.state = {
-      gameboard: [
-        [0,0,0],
-        [0,0,0],
-        [0,0,0]
-      ],
+      gameboard: [],
       player1: false,
       playerOneName: "",
       playerTwoName: "",
@@ -74,7 +65,7 @@ export default class App extends React.Component {
 
   _joinRoom(userName, joinKey) {
     console.log("joined!");
-    socket.emit('join room', {joinKey, userName});
+    socket.emit('join room', {joinKey: joinKey, userName: userName});
     this.setState({userName: userName});
   }
 
@@ -88,7 +79,7 @@ export default class App extends React.Component {
       board[colNum][rowNum] = -1;
     }
     this.setState({gameboard: board, turn: this.state.turn +1});
-    socket.emit('update board', this.state.gameboard);
+    socket.emit('update board', {gameRoom: this.state.roomName, gameBoard: this.state.gameboard});
     this.checkWin();
     console.log(this.state.gameboard);
     console.log(this.state.turn);
