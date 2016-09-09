@@ -3,7 +3,7 @@ import Header from "./Header";
 import Board from "./Board";
 import Login from "./Login";
 import io from "socket.io-client";
-let socket = io.connect('localhost:5000');
+let socket = io.connect();
 
 export default class App extends React.Component {
 
@@ -21,6 +21,7 @@ export default class App extends React.Component {
         playerOneName: gameStart.playerOneName,
         playerTwoName: gameStart.playerTwoName,
         gameBegin: gameStart.gameBegin,
+        turn: gameStart.playerTurn,
         isWaiting: false
       })
       console.log("game starts with " + this.state.playerOneName + " & " + this.state.playerTwoName);
@@ -88,6 +89,7 @@ export default class App extends React.Component {
   }
 
   resetBoard() {
+    socket.emit('reset board', this.state.roomName);
     this.state = {
       gameboard: [
         [0,0,0],

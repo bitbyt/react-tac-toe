@@ -13,6 +13,10 @@ module.exports = {
     port: 1337
   },
   entry: "./js/client.js",
+  output: {
+    path: __dirname + "/src/",
+    filename: "client.min.js"
+  },
   module: {
     loaders: [
       {
@@ -26,9 +30,8 @@ module.exports = {
       }
     ]
   },
-  output: {
-    path: __dirname + "/src/",
-    filename: "client.min.js"
+  resolve: {
+    extensions: ['', '.js', '.json']
   },
   plugins: debug ? [] : [
     new webpack.optimize.DedupePlugin(),
